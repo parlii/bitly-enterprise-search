@@ -87,7 +87,10 @@ if __name__ == "__main__":
 
     llm = VertexAI(**parameters, credentials=credentials)
 
-    chain = RetrievalQAWithSourcesChain.from_chain_type(
-        llm=llm, chain_type="stuff", retriever=retriever, return_source_documents=True)
+    chain = RetrievalQAWithSourcesChain.from_llm(
+        llm=llm, retriever=retriever, return_source_documents=True)
+
+    # chain = RetrievalQAWithSourcesChain.from_chain_type(
+    #     llm=llm, chain_type="stuff", retriever=retriever, return_source_documents=True)
 
     main()
