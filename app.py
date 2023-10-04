@@ -4,6 +4,7 @@ from langchain.llms import VertexAI
 from langchain.retrievers import GoogleCloudEnterpriseSearchRetriever
 from google.oauth2 import service_account
 import logging
+import os
 
 # Initialize session state for conversation history
 # if 'chat_history' not in st.session_state:
@@ -84,6 +85,8 @@ if __name__ == "__main__":
         credentials=credentials
     )
 
+    st.write(os.environ["GOOGLE_APPLICATION_CREDENTIALS"])
+
     # query = "How to create a new service?"
 
     # result = retriever.get_relevant_documents(query)
@@ -91,16 +94,16 @@ if __name__ == "__main__":
     #     st.write(doc.metadata['source'])
     #     st.write(doc.page_content)
 
-    parameters = {
-        "temperature": 0,
-        "max_output_tokens": 2000,
-        "model_name": "text-bison@latest"
-    }
+    # parameters = {
+    #     "temperature": 0,
+    #     "max_output_tokens": 2000,
+    #     "model_name": "text-bison@latest"
+    # }
 
-    chain = RetrievalQAWithSourcesChain.from_chain_type(
-        VertexAI(**parameters), chain_type="stuff", retriever=retriever, return_source_documents=True)
+    # chain = RetrievalQAWithSourcesChain.from_chain_type(
+    #     VertexAI(**parameters), chain_type="stuff", retriever=retriever, return_source_documents=True)
 
-    result = chain({"question": "How to create a new service?"})
-    st.write(result)
+    # result = chain({"question": "How to create a new service?"})
+    # st.write(result)
 
     main()
