@@ -16,8 +16,9 @@ def main():
     st.title("Retrieval QA Streamlit App")
     question = st.text_input("Enter your question:")
 
-    if question == "":
-        st.write(INSTRUCTIONS)
+    if st.button("Ask"):
+        st.write("Hello")
+        st.write(st.secrets[question])
 
     # # Retrieve the conversation history from the session state
     # chat_history = st.session_state['chat_history']
