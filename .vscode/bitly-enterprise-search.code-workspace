@@ -1,0 +1,19 @@
+{
+    "folders": [
+        {
+            "path": "/Users/drizal/parli/bitly-enterprise-search"
+        },
+        // {
+        //     "path": "/Users/drizal/bitly/docs"
+        // },
+        // {
+        //     "path": "/Users/drizal/bitly/bitly"
+        // }
+    ],
+    "settings": {
+        "[python]": {
+            "editor.defaultFormatter": "ms-python.autopep8"
+        },
+        "python.formatting.provider": "none"
+    },
+}
