@@ -13,22 +13,53 @@ if 'chat_history' not in st.session_state:
 INSTRUCTIONS = "Further instructions: Respond your answer in as much detail as possible. Do not make stuff up, use the summaries to provide a response. Respond in markdown format."
 
 
+def check_password():
+    correct_password = st.secrets["PASSWORD"]
+
+    # Check if the password has been entered before and is correct
+    if 'password' in st.session_state and st.session_state['password'] == correct_password:
+        return True  # The password is correct
+
+    entered_password = st.sidebar.text_input(
+        "Enter password:", type="password")
+
+    # Check the entered password
+    if entered_password:
+        if entered_password == correct_password:
+            # Save the correct password in session state
+            st.session_state['password'] = entered_password
+            st.sidebar.success("Welcome!")
+            return True  # The password is correct
+        else:
+            st.sidebar.error("Incorrect password. Please try again.")
+            return False  # The password is incorrect
+
+    return False  # No password has been entered yet
+
+
 def main():
-    st.title("Chat with Bitly Docs")
-    question = st.text_input("Enter your question:")
+    # if not check_password():
+    #     return  # Stop execution if the password is incorrect
+
+    st.title("Ask Bitly Docs")
+
+    with st.form(key='question_form'):
+        question = st.text_input("Enter your question:")
+        submit_button = st.form_submit_button("Ask")
 
     # Retrieve the conversation history from the session state
     chat_history = st.session_state['chat_history']
 
-    if st.button("Ask"):
-        # Pass the question and conversation history to the chain
-        result = chain({"question": question})
+    if submit_button:
+        with st.spinner('Wait for it...'):
+            # Pass the question and conversation history to the chain
+            result = chain({"question": question})
 
-        # Add the question to the conversation history
-        chat_history.append(question)
+            # Add the question to the conversation history
+            chat_history.append(question)
 
-        # Add the answer to the conversation history (if needed)
-        chat_history.append(result["answer"])
+            # Add the answer to the conversation history (if needed)
+            chat_history.append(result["answer"])
 
         # Display the answer and source documents
         st.markdown(result["answer"])
@@ -66,8 +97,11 @@ def get_github_url(url):
 
 
 if __name__ == "__main__":
-    st.set_page_config(page_title="BitChat", page_icon=constants.BITLY_ICON_URL, layout="centered", initial_sidebar_state="expanded",     menu_items={
-        'About': "### This app uses Google's Enterprise Datastore to fetch relevant docs, then leverage Vertex AI to summarize them for you!"
+    st.set_page_config(page_title="BitChat", page_icon=constants.BITLY_ICON_URL, layout="centered", initial_sidebar_state="auto",     menu_items={
+        # 'Github': constants.GITHUB_REPO_URL,
+        # "GCS Bucket": constants.GCS_BUCKET_URL,
+        # "GCS App Builder": constants.GCS_APP_BUILDER,
+        'About': constants.ABOUT_TEXT
     })
 
     # Create API client.
