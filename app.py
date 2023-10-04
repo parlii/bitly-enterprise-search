@@ -72,22 +72,24 @@ def main():
 
 
 if __name__ == "__main__":
-    logger = logging.getLogger()
-    logger.setLevel(logging.INFO)
-    logger.info("Starting app")
-
-    logger.info(st.secrets["PROJECT_ID"])
     # Create API client.
-    # credentials = service_account.Credentials.from_service_account_info(
-    #     st.secrets["connections"].gcs
-    # )
+    credentials = service_account.Credentials.from_service_account_info(
+        st.secrets["connections"].gcs
+    )
 
-    # retriever = GoogleCloudEnterpriseSearchRetriever(
-    #     project_id=st.secrets["PROJECT_ID"],
-    #     search_engine_id=st.secrets["SEARCH_ENGINE_ID"],
-    #     max_documents=3,
-    #     credentials=credentials
-    # )
+    retriever = GoogleCloudEnterpriseSearchRetriever(
+        project_id=st.secrets["PROJECT_ID"],
+        search_engine_id=st.secrets["SEARCH_ENGINE_ID"],
+        max_documents=3,
+        credentials=credentials
+    )
+
+    query = "How to create a new service?"
+
+    result = retriever.get_relevant_documents(query)
+    for doc in result:
+        st.write(doc.metadata['source'])
+        st.write(doc.page_content)
 
     # parameters = {
     #     "temperature": 0,
