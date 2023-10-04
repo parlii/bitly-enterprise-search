@@ -1,3 +1,6 @@
+import tempfile
+import json
+import os
 import streamlit as st
 from langchain.chains import RetrievalQAWithSourcesChain
 from langchain.llms import VertexAI
@@ -9,6 +12,8 @@ if 'chat_history' not in st.session_state:
     st.session_state['chat_history'] = []
 
 INSTRUCTIONS = "Further instructions: Respond your answer in as much detail as possible. Do not make stuff up, use the summaries to provide a response. Respond in markdown format."
+
+temp_credentials_file = tempfile.NamedTemporaryFile(delete=False)
 
 
 def main():
@@ -66,7 +71,22 @@ def main():
     st.session_state['chat_history'] = chat_history
 
 
+def create_secrets_file():
+    try:
+        # Extract the credentials from st.secrets
+        credentials_data = st.secrets["connections"].gcs
+
+        # Write the credentials data to the temporary file
+        with open(temp_credentials_file.name, 'w') as file:
+            json.dump(credentials_data, file)
+
+        os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = temp_credentials_file.name
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
+
+
 if __name__ == "__main__":
+    create_secrets_file()
     # Create API client.
     credentials = service_account.Credentials.from_service_account_info(
         st.secrets["connections"].gcs
@@ -94,3 +114,5 @@ if __name__ == "__main__":
     #     llm=llm, chain_type="stuff", retriever=retriever, return_source_documents=True)
 
     main()
+    # At the end of your code or when the credentials are no longer needed
+    os.unlink(temp_credentials_file.name)
