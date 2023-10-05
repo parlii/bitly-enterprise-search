@@ -1,4 +1,8 @@
-.streamlit
+.streamlit/secrets.toml
 venv
 
 1
+
+data-prep1
+
+metadata.txt

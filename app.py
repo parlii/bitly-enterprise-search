@@ -38,10 +38,14 @@ def check_password():
 
 
 def main():
-    # if not check_password():
-    #     return  # Stop execution if the password is incorrect
+    if not check_password():
+        return  # Stop execution if the password is incorrect
 
     st.title("Ask Bitly Docs")
+
+    st.sidebar.link_button("Github Repo", constants.GITHUB_REPO_URL)
+    st.sidebar.link_button("GCS Bucket", constants.GCS_BUCKET_URL)
+    st.sidebar.link_button("GCS App Builder", constants.GCS_APP_BUILDER)
 
     with st.form(key='question_form'):
         question = st.text_input("Enter your question:")
